@@ -18,28 +18,32 @@ const initial = {
 	],
 };
 
-export const reducer = (state = initial, action) => {
-	switch (action.type) {
+export const reducer = (state = initial, { type, payload }) => {
+	switch (type) {
 		case ADD_FEATURE: {
 			return {
 				...state,
-				car : {
+				car   : {
 					...state.car,
-					features : [ ...state.car.features, action.payload ],
-					price    : state.car.price + action.payload.price,
+					features : [ ...state.car.features, payload ],
+					price    : state.car.price + payload.price,
 				},
+				store : state.store.filter(f => f.id !== payload.id),
+				//This line makes you only able to buy an item once.
 			};
 		}
 		case REMOVE_FEATURE: {
 			return {
 				...state,
-				car : {
+				car   : {
 					...state.car,
 					features : state.car.features.filter(feature => {
-						return feature.id !== action.payload.id;
+						return feature.id !== payload.id;
 					}),
-					price    : state.car.price - action.payload.price,
+					price    : state.car.price - payload.price,
 				},
+				store : [ ...state.store, payload ],
+				//This line makes you only able to buy an item once.
 			};
 		}
 		default:
